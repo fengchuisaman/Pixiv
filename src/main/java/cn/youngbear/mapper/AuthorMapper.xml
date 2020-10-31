@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.mapper.AuthorMapper">
+  <resultMap id="BaseResultMap" type="com.test.pojo.Author">
+    <id column="author_id" jdbcType="VARCHAR" property="authorId" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="author_pic" jdbcType="VARCHAR" property="authorPic" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    author_id, author_name, author_pic
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from author
+    where author_id = #{authorId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from author
+    where author_id = #{authorId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.test.pojo.Author">
+    insert into author (author_id, author_name, author_pic
+      )
+    values (#{authorId,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR}, #{authorPic,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.test.pojo.Author">
+    insert into author
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="authorId != null">
+        author_id,
+      </if>
+      <if test="authorName != null">
+        author_name,
+      </if>
+      <if test="authorPic != null">
+        author_pic,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="authorId != null">
+        #{authorId,jdbcType=VARCHAR},
+      </if>
+      <if test="authorName != null">
+        #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorPic != null">
+        #{authorPic,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.test.pojo.Author">
+    update author
+    <set>
+      <if test="authorName != null">
+        author_name = #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorPic != null">
+        author_pic = #{authorPic,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where author_id = #{authorId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Author">
+    update author
+    set author_name = #{authorName,jdbcType=VARCHAR},
+      author_pic = #{authorPic,jdbcType=VARCHAR}
+    where author_id = #{authorId,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectAuthorByAuthorId" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select * from author where author_id =#{authorId}
+  </select>
+</mapper>
