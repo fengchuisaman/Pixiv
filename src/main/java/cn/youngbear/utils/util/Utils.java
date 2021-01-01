@@ -229,7 +229,12 @@ public class Utils {
 
 
     public static void downloadUseHttpClient(Map<String, String> headerMap,String urlPath, String path, String fileName) throws IOException {
-        File file = new File(path + fileName);
+        String filePath = path + fileName;
+        String currOS = System.getProperty("os.name").toLowerCase();
+        if(!currOS.contains("windows")){
+            filePath.replace("\\","/");
+        }
+        File file = new File(filePath);
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response ;
         long begin = 0;

@@ -301,7 +301,7 @@ public class BaseService {
             // 选择方式 下载还是存储
             if("true".equals(Constant.isDownLoadPic)){
                 List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
-                saveToFile.baseDownloadPic(headerMap, picNameUrlList,"love\\\\"+authName+"\\\\");
+                saveToFile.baseDownloadPic(headerMap, picNameUrlList,"love\\"+authName+"\\");
             }
             if("".equals(Constant.isSaveDataToMysql)){
 //            saveToDB
