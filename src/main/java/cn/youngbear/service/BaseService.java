@@ -69,6 +69,7 @@ public class BaseService {
         System.out.println("============================");
         try {
             choose = sc.nextInt();
+//            choose=8;
             if (choose == 0) {
                 this.begin("recommend",dataMap);
                 return "recommend";

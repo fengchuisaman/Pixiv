@@ -112,7 +112,6 @@ public class Utils {
             }else{
                 response = httpClient.execute(httppost);
             }
-            // response.getStatusLine().getStatusCode() == 200
             if (response.getStatusLine().getStatusCode() == 200) {
                 response.setHeader("Content-Type","application/json");
                 HttpEntity entity = response.getEntity();

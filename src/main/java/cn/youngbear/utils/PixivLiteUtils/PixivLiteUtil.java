@@ -84,13 +84,13 @@ public class PixivLiteUtil {
     }
 
     public String getDeviceToken(String email) {
-        String loginUrl = "http://api.pixivlite.com:8091/index.php/user/index/getDeviceToken?email=" + email;
+        String getDeviceUrl = "http://api.pixivlite.com:8091/index.php/user/index/getDeviceToken?email=" + email;
         ArrayList<NameValuePair> paramsList = new ArrayList<>(8);
         HashMap headerMap = new HashMap(16);
         headerMap.put("User-Agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)");
         headerMap.put("Host", "oauth.secure.pixiv.net");
         paramsList.add(new BasicNameValuePair("device_token", "pixiv"));
-        String result = Utils.sendPost(loginUrl, false, true, headerMap, null, paramsList);
+        String result = Utils.sendPost(getDeviceUrl, false, true, headerMap, null, paramsList);
         Map<String, Map> resultMap = JSONObject.parseObject(result, Map.class);
         Constant.deviceToken= String.valueOf(resultMap.get("device_token"));
         return result;
