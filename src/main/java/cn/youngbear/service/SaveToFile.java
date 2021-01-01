@@ -97,11 +97,6 @@ public class SaveToFile {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            File file = new File(dirPath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
             try {
                 Utils.downloadUseHttpClient(headerMap,picDownloadUrl, dirPath, picName);
             } catch (IOException e) {

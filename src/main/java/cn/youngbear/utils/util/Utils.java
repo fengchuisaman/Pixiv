@@ -228,11 +228,20 @@ public class Utils {
     }
 
 
-    public static void downloadUseHttpClient(Map<String, String> headerMap,String urlPath, String path, String fileName) throws IOException {
-        String filePath = path + fileName;
+    public static void downloadUseHttpClient(Map<String, String> headerMap,String urlPath, String dirPath, String fileName) throws IOException {
+        String filePath = dirPath + fileName;
         String currOS = System.getProperty("os.name").toLowerCase();
+        //如果文件夹不存在，创建
         if(!currOS.contains("windows")){
-            filePath.replace("\\","/");
+            dirPath = dirPath.replace("\\","/");
+        }
+        File dirFile = new File(dirPath);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+
+        if(!currOS.contains("windows")){
+            filePath=filePath.replace("\\","/");
         }
         File file = new File(filePath);
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -269,7 +278,7 @@ public class Utils {
             }
         }
         long end = System.currentTimeMillis();
-        System.out.println("时间" + LocalDateTime.now() + "文件已下载：" + path + fileName + "  共耗时：" + (end - begin) / 1000.0 + "秒");
+        System.out.println("时间" + LocalDateTime.now() + "文件已下载：" + dirPath + fileName + "  共耗时：" + (end - begin) / 1000.0 + "秒");
     }
 
 //    public Map<String, Set> changOriginalFieldToPojo(List fullFieldPicList) {
