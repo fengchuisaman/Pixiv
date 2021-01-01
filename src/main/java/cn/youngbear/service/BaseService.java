@@ -1,7 +1,7 @@
 package cn.youngbear.service;
 
 import cn.youngbear.utils.PixivLiteUtils.PixivLiteUtil;
-import cn.youngbear.utils.util.Constant;
+import cn.youngbear.pojo.Constant;
 import cn.youngbear.utils.util.Utils;
 import com.alibaba.fastjson.JSON;
 

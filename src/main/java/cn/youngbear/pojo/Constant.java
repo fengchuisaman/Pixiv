@@ -1,6 +1,4 @@
-package cn.youngbear.utils.util;
-
-import sun.management.Agent;
+package cn.youngbear.pojo;
 
 public class Constant {
     public static String loginUserId;

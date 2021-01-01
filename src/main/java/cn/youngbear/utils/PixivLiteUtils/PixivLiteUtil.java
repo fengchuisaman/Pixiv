@@ -1,15 +1,13 @@
 package cn.youngbear.utils.PixivLiteUtils;
 
-import cn.youngbear.utils.util.Constant;
+import cn.youngbear.pojo.Constant;
 import cn.youngbear.utils.util.Utils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -92,7 +90,8 @@ public class PixivLiteUtil {
         headerMap.put("Host", "oauth.secure.pixiv.net");
         paramsList.add(new BasicNameValuePair("device_token", "pixiv"));
         String result = Utils.sendPost(loginUrl, false, true, headerMap, null, paramsList);
-        Constant.deviceToken=result;
+        Map<String, Map> resultMap = JSONObject.parseObject(result, Map.class);
+        Constant.deviceToken= String.valueOf(resultMap.get("device_token"));
         return result;
     }
 

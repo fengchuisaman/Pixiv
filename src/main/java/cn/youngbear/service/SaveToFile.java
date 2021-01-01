@@ -1,16 +1,14 @@
 package cn.youngbear.service;
 
-import cn.youngbear.utils.util.Constant;
+import cn.youngbear.pojo.Constant;
 import cn.youngbear.utils.util.Utils;
 import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class SaveToFile {
 

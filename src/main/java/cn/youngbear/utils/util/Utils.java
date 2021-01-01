@@ -1,5 +1,6 @@
 package cn.youngbear.utils.util;
 
+import cn.youngbear.pojo.Constant;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -333,5 +334,6 @@ public class Utils {
 //        resultMap.put("resultPicTagList", resultPicTagList);
 //        return resultMap;
 //    }
+
 
 }
