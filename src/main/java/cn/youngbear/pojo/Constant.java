@@ -9,7 +9,8 @@ public class Constant {
 
     public static String timeSpan;
     public static String isDownLoadPic;
-    public static String picPath;
+    public static String downloadPathForWindows;
+    public static String downloadPathForLinux;
     public static String isSaveDataToMysql;
     public static String wordLimit;
     public static String downloadLimit;

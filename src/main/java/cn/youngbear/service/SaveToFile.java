@@ -75,9 +75,16 @@ public class SaveToFile {
      * @param secondarDirectory 传二级目录
      */
     public void baseDownloadPic(Map<String, String> headerMap, List<Map<String,String>> picList,String secondarDirectory) {
-        byte[] basePath = (Constant.picPath).getBytes();
-        String dirPath = null;
+        String currOS = System.getProperty("os.name").toLowerCase();
+        byte[] basePath = new byte[10];
+        if(currOS.contains("windows")){
+            basePath = (Constant.downloadPathForWindows).getBytes();
+        }else{
+            basePath = (Constant.downloadPathForLinux).getBytes();
+        }
 
+
+        String dirPath = null;
         for (Map<String,String> map : picList) {
             String picName = map.get("picName");
             String picDownloadUrl = map.get("picDownloadUrl");
