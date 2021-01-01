@@ -38,7 +38,7 @@ public class Utils {
 
 
     public static String sendGet(String url,boolean isUserProxy, Map<String, String> headerMap, Map<String, String> paramsMap) {
-        String returnValue = null;
+        String returnValue = "";
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
         try {

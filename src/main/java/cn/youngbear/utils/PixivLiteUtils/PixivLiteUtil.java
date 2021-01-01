@@ -45,6 +45,7 @@ public class PixivLiteUtil {
         String passWord = String.valueOf(Constant.loginUserPassWord);
         String xClientTime = PixivLiteUtil.clientTime();
         String xClientHash = PixivLiteUtil.clientHash(xClientTime);
+        String deviceToken = getDeviceToken(userName);
         String loginUrl = "http://api.pixivlite.com:8091/index.php/user/index/login";
         headerMap.put("User-Agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)");
         headerMap.put("Content-Type", "application/x-www-form-urlencoded");
@@ -55,7 +56,7 @@ public class PixivLiteUtil {
         paramsList.add(new BasicNameValuePair("agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)"));
         paramsList.add(new BasicNameValuePair("username", userName));
         paramsList.add(new BasicNameValuePair("password", passWord));
-        paramsList.add(new BasicNameValuePair("device_token", getDeviceToken(userName)));
+        paramsList.add(new BasicNameValuePair("device_token", deviceToken));
         paramsList.add(new BasicNameValuePair("x-client-time", xClientTime));
         paramsList.add(new BasicNameValuePair("x-client-hash", xClientHash));
         String result = Utils.sendPost(loginUrl, false, true, headerMap, null, paramsList);
@@ -71,7 +72,7 @@ public class PixivLiteUtil {
             Constant.acceptLanguage="zh_CN";
             Constant.acceptEncoding="gzip";
             Constant.connection="Connection";
-            Constant.deviceToken=getDeviceToken(userName);
+            Constant.deviceToken=deviceToken;
             Constant.xClientTime=xClientTime;
             Constant.xClientHash=xClientHash;
             Constant.token="Bearer " + token;

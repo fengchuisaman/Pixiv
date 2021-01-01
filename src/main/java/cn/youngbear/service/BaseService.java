@@ -140,52 +140,52 @@ public class BaseService {
                 Url = Constant.baseUrl + "day";
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 dataMap.put("path", "Day\\" + df.format(LocalDateTime.now()));
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "week":
                 Url = Constant.baseUrl + "week";
                 dataMap.put("path", "Week\\" + LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-w")));
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "month":
                 Url = Constant.baseUrl + "month";
                 dataMap.put("path", "Month\\" + LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-M")));
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "Male":
                 Url = Constant.baseUrl + "day_male";
                 dataMap.put("path", "Male");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "female":
                 Url = Constant.baseUrl + "day_female";
                 dataMap.put("path", "Female");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "original":
                 Url = Constant.baseUrl + "week_original";
                 dataMap.put("path", "Orginal");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "r18":
                 Url = Constant.baseUrl + Constant.timeSpan + "_r18";
                 dataMap.put("path", "R18");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "r18g":
                 Url = Constant.baseUrl + Constant.timeSpan + "_r18g";
                 dataMap.put("path", "R18g");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "word":
                 Url = Constant.wordUrl;
                 dataMap.put("path", "Word\\" + dataMap.get("word"));
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "authId":
                 Url = Constant.authIdUrl;
                 dataMap.put("path", "AuthId");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
             case "love":
                 dataMap.put("path", "Love");
@@ -194,20 +194,19 @@ public class BaseService {
             case "recommend":
                 Url = Constant.recommendUrl;
                 dataMap.put("path", "Recommend");
-                getPicByWord(headerMap, Url, dataMap);
+                getPicForBase(headerMap, Url, dataMap);
                 break;
         }
     }
 
 
     /**
-     * 根据关键字获取
-     *
+     * 获取基本的操作（每日 每周 每月 推荐……）作品
      * @param headerMap
      * @param Url
      * @param dataMap
      */
-    public void getPicByWord(Map<String, String> headerMap, String Url, Map<String, String> dataMap) {
+    public void getPicForBase(Map<String, String> headerMap, String Url, Map<String, String> dataMap) {
         if (Url.contains("&word=") || dataMap.get("word") != null) {
             Url = Url + dataMap.get("word");
             if (propertiesMap.get("wordLimit") != null) {
@@ -239,6 +238,7 @@ public class BaseService {
                 break;
             }
         }
+        // 选择方式 下载还是存储
         if("true".equals(Constant.isDownLoadPic)){
             List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
             saveToFile.baseDownloadPic(headerMap, picNameUrlList,dataMap.get("path"));
@@ -250,6 +250,10 @@ public class BaseService {
     }
 
 
+    /**
+     * 获取关注人的作品
+     * @param headerMap
+     */
     public void getLovePic(Map<String, String> headerMap) {
         String authName;
         List picList = new LinkedList();
@@ -293,6 +297,7 @@ public class BaseService {
                 }
 
             }
+            // 选择方式 下载还是存储
             if("true".equals(Constant.isDownLoadPic)){
                 List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
                 saveToFile.baseDownloadPic(headerMap, picNameUrlList,"love\\\\"+authName+"\\\\");
