@@ -259,7 +259,6 @@ public class BaseService {
         String authName;
         List picList = new LinkedList();
         List<String> authIdList = new ArrayList<>();
-        List<Map<String,String>> resultMapList = new ArrayList<>();
         String loveAuthUrl = Constant.loveAuthUrl+Constant.loginUserId;
         String result = Utils.sendGet(loveAuthUrl, Boolean.valueOf(Constant.useProxy),headerMap,null);
         Map resultMap = JSON.parseObject(result, Map.class);
@@ -271,7 +270,7 @@ public class BaseService {
             }
         }
 //        for (String authId : authIdList) {
-        for (int j=5 ;j<=authIdList.size();j++) {
+        for (int j=0 ;j<authIdList.size();j++) {
             String  authId = authIdList.get(j);
             String userPicUrl = Constant.userPicUrl+ authId;
             while (true) {
