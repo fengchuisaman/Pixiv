@@ -270,11 +270,14 @@ public class Utils {
             begin = System.currentTimeMillis();
             FileUtils.copyInputStreamToFile(is,file);
         } catch (Exception e) {
-            System.out.println(urlPath);
-            e.printStackTrace();
+            System.out.println("下载"+filePath+"发生异常："+e.getMessage());
+            File file1 = new File(filePath);
+            String txtContent = "在"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+" 下载图片"+fileName+"出现异常\n，异常："+e.getMessage()+"\n图片地址是:"+urlPath;
+            FileUtils.write(file1,txtContent,false);
         } finally {
             if (is != null) {
                 is.close();
+                downloadUseHttpClient( headerMap,urlPath, dirPath,fileName);
             }
         }
         long end = System.currentTimeMillis();

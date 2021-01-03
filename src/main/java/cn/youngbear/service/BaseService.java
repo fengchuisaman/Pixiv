@@ -68,8 +68,8 @@ public class BaseService {
 //        System.out.println("10、r18g");
         System.out.println("============================");
         try {
-            choose = sc.nextInt();
-//            choose=8;
+//            choose = sc.nextInt();
+            choose=8;
             if (choose == 0) {
                 this.begin("recommend",dataMap);
                 return "recommend";
@@ -256,7 +256,7 @@ public class BaseService {
      * @param headerMap
      */
     public void getLovePic(Map<String, String> headerMap) {
-        String authName;
+        String authName ="";
         List picList = new LinkedList();
         List<String> authIdList = new ArrayList<>();
         String loveAuthUrl = Constant.loveAuthUrl+Constant.loginUserId;
@@ -271,28 +271,44 @@ public class BaseService {
         }
 //        for (String authId : authIdList) {
         for (int j=0 ;j<authIdList.size();j++) {
+            picList = new LinkedList();
             String  authId = authIdList.get(j);
             String userPicUrl = Constant.userPicUrl+ authId;
+            totalDownloadCount=0;
             while (true) {
                 String picListresult = Utils.sendGet(userPicUrl, Boolean.valueOf(Constant.useProxy),headerMap,null);
                 resultMap = JSON.parseObject(picListresult, Map.class);
                 List<Map> authPicList = (List) resultMap.get("illusts");
+                if(authPicList == null || authPicList.get(0)==null | authPicList.get(0).get("user") == null){
+                    break;
+                }
                 authName = String.valueOf(((Map) authPicList.get(0).get("user")).get("name"));
                 for (int i = 0; i < authPicList.size(); i++) {
                     if (totalDownloadCount++ <= Integer.valueOf(Constant.downloadLimit)) {
-                        if (list != null) {
+                        if (authPicList.get(i) != null) {
                             picList.add(authPicList.get(i));
                         }
-                    }
-                    //如果没有下一页，直接退出
-                    if (resultMap.get("next_url") != null) {
-                        userPicUrl = (String) resultMap.get("next_url");
-                        userPicUrl = userPicUrl.replace("https:","http:").replace("app-api.pixiv.net","api.pixivlite.com:8091");
-                    } else {
+                    }else{
+                        System.out.println("数量达到"+totalDownloadCount+",停止下载");
                         break;
                     }
+
                 }
-                if (totalDownloadCount > Integer.valueOf(Constant.downloadLimit)) {
+                if (totalDownloadCount >= Integer.valueOf(Constant.downloadLimit)) {
+                    System.out.println("数量达到"+totalDownloadCount+",停止下载");
+                    break;
+                }
+                //如果没有下一页，直接退出
+                if (resultMap.get("next_url") != null) {
+                    userPicUrl = (String) resultMap.get("next_url");
+                    userPicUrl = userPicUrl.replace("https:","http:").replace("app-api.pixiv.net","api.pixivlite.com:8091");
+                    //睡觉 防止调用被拌
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        System.out.println("线程睡觉 睡死了");
+                    }
+                } else {
                     break;
                 }
 
@@ -301,11 +317,11 @@ public class BaseService {
             if("true".equals(Constant.isDownLoadPic)){
                 List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
                 saveToFile.baseDownloadPic(headerMap, picNameUrlList,"love\\"+authName+"\\");
+                System.out.println("下载文件完成，下载总数为"+picNameUrlList.size());
             }
             if("".equals(Constant.isSaveDataToMysql)){
 //            saveToDB
             }
-            System.out.println("完成");
 
 
         }
