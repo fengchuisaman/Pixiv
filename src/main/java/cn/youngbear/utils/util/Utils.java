@@ -270,14 +270,19 @@ public class Utils {
             begin = System.currentTimeMillis();
             FileUtils.copyInputStreamToFile(is,file);
         } catch (Exception e) {
-            System.out.println("下载"+filePath+"发生异常："+e.getMessage());
-            File file1 = new File(filePath);
-            String txtContent = "在"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+" 下载图片"+fileName+"出现异常\n，异常："+e.getMessage()+"\n图片地址是:"+urlPath;
-            FileUtils.write(file1,txtContent,false);
+            // 如果发生Connection reset 就输出到错误信息到文件中
+            if(e.getMessage().contains("Connection reset")){
+                e.printStackTrace();
+                System.out.println("下载"+filePath+"发生异常："+e.getMessage());
+//                File file1 = new File(filePath);
+//                String txtContent = "在"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+" 下载图片"+fileName+"出现异常\n，异常："+e.getMessage()+"\n图片地址是:"+urlPath;
+//                FileUtils.write(file1,txtContent,false);
+                downloadUseHttpClient( headerMap,urlPath, dirPath,fileName);
+            }
         } finally {
             if (is != null) {
                 is.close();
-                downloadUseHttpClient( headerMap,urlPath, dirPath,fileName);
+
             }
         }
         long end = System.currentTimeMillis();

@@ -289,13 +289,12 @@ public class BaseService {
                             picList.add(authPicList.get(i));
                         }
                     }else{
-                        System.out.println("数量达到"+totalDownloadCount+",停止下载");
                         break;
                     }
 
                 }
                 if (totalDownloadCount >= Integer.valueOf(Constant.downloadLimit)) {
-                    System.out.println("数量达到"+totalDownloadCount+",停止下载");
+                    System.out.println("作者"+authName+"数量达到"+totalDownloadCount+",停止爬取");
                     break;
                 }
                 //如果没有下一页，直接退出
