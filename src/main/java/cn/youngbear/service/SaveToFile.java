@@ -90,7 +90,7 @@ public class SaveToFile {
             String picDownloadUrl = map.get("picDownloadUrl");
             try {
                 if(secondarDirectory!=null && !"".equals(secondarDirectory)){
-                    dirPath = new String(basePath,"UTF-8")+secondarDirectory;
+                    dirPath = new String(basePath,"UTF-8")+secondarDirectory+"\\";
                 }else{
                     dirPath = new String(basePath,"UTF-8")+"other"+"\\";
                 }

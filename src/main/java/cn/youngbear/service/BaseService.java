@@ -68,8 +68,8 @@ public class BaseService {
 //        System.out.println("10、r18g");
         System.out.println("============================");
         try {
-//            choose = sc.nextInt();
-            choose=8;
+            choose = sc.nextInt();
+//            choose=3;
             if (choose == 0) {
                 this.begin("recommend",dataMap);
                 return "recommend";
