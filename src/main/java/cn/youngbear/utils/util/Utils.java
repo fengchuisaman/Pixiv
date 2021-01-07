@@ -19,14 +19,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.text.ParsePosition;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -34,10 +31,11 @@ import java.util.*;
 public class Utils {
 
 
-    public static String sendGet(String url,boolean isUserProxy, Map<String, String> headerMap, Map<String, String> paramsMap) {
+    public static String sendGet(String url, Map<String, String> headerMap, Map<String, String> paramsMap) {
         String returnValue = "";
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = null;
+        boolean isUserProxy = Boolean.parseBoolean(Constant.useProxy);
         try {
             httpClient = HttpClients.createDefault();
             URIBuilder urlBuilder = new URIBuilder(url);
@@ -84,10 +82,11 @@ public class Utils {
         return returnValue;
     }
 
-    public static String sendPost(String url, boolean isUserProxy,boolean isForm, Map<String, String> headerMap, Map<String, String> paramsMap, List<? extends NameValuePair> paramsList) {
+    public static String sendPost(String url, boolean isForm, Map<String, String> headerMap, Map<String, String> paramsMap, List<? extends NameValuePair> paramsList) {
         String returnValue = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
+        boolean isUserProxy = Boolean.parseBoolean(Constant.useProxy);
         try {
             HttpPost httppost = new HttpPost(url);
             for (String key : headerMap.keySet()) {
@@ -137,56 +136,14 @@ public class Utils {
         return returnValue;
     }
 
-    public static void downloadFile(String urlPath, String path, String fileName) throws IOException {
-        File file = new File(path + fileName);
-        URL url = new URL(urlPath);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestProperty("Referer", "https://www.pixiv.net");
-        urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-        long begin = 0;
-        FileOutputStream fos = null;
-        InputStream is = null;
-        try {
-            if (file.exists()) {
-                if (urlConnection.getContentLength() == file.length()) {
-                    System.out.println("发现重复文件：   " + fileName);
-                    return;
-                } else {
-                    System.out.println("发现重复文件：   " + fileName + "，且文件损坏，删除文件，重新下载");
-                    file.delete();
-                }
-            }
-            begin = System.currentTimeMillis();
-            is = urlConnection.getInputStream();
-            byte[] data = new byte[3 * 1024 * 1024];
-            int lenth;
-            fos = new FileOutputStream(file);
-            while ((lenth = is.read(data)) != -1) {
-                fos.write(data, 0, lenth);
-            }
-            fos.flush();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                fos.close();
-            }
-            if (is != null) {
-                is.close();
-            }
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("时间" + LocalDateTime.now() + "文件已下载：" + path + fileName + "  共耗时：" + (end - begin) / 1000.0 + "秒");
-    }
-
-    public static Date changStrToDate(String dateStr) {
+    public Date changStrToDate(String dateStr) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        ParsePosition pos = new ParsePosition(0);
-        Date strtodate = formatter.parse(dateStr, pos);
+        Date strtodate = null;
+        try {
+            strtodate = formatter.parse(dateStr);
+        } catch (ParseException e) {
+            System.out.println();
+        }
         return strtodate;
     }
 

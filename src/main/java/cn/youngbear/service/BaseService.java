@@ -26,9 +26,8 @@ public class BaseService {
     public void init() {
         Properties prop = new Properties();
         try {
-            //读取属性文件a.properties
+            //读取属性文件config.properties
             prop.load(this.getClass().getResourceAsStream("/config.properties"));
-//            prop.load(new InputStreamReader(this.getClass().getResourceAsStream("/config.properties"), "UTF-8"));
             Iterator<String> it = prop.stringPropertyNames().iterator();
             Constant constant = new Constant();
             Class<?> clz = constant.getClass();
@@ -219,7 +218,7 @@ public class BaseService {
         }
         List picList = new LinkedList();
         while (true) {
-            String result = Utils.sendGet(Url, Boolean.valueOf(Constant.useProxy),headerMap,null);
+            String result = Utils.sendGet(Url,headerMap,null);
             Map resultMap = JSON.parseObject(result, Map.class);
             List<Map> list = (List) resultMap.get("illusts");
             for (int i = 0; i < list.size(); i++) {
@@ -261,7 +260,7 @@ public class BaseService {
         List picList = new LinkedList();
         List<String> authIdList = new ArrayList<>();
         String loveAuthUrl = Constant.loveAuthUrl+Constant.loginUserId;
-        String result = Utils.sendGet(loveAuthUrl, Boolean.valueOf(Constant.useProxy),headerMap,null);
+        String result = Utils.sendGet(loveAuthUrl, headerMap,null);
         Map resultMap = JSON.parseObject(result, Map.class);
         List<Map> list = (List) resultMap.get("user_previews");
         for (Map map : list) {
@@ -277,7 +276,7 @@ public class BaseService {
             String userPicUrl = Constant.userPicUrl+ authId;
             totalDownloadCount=0;
             while (true) {
-                String picListresult = Utils.sendGet(userPicUrl, Boolean.valueOf(Constant.useProxy),headerMap,null);
+                String picListresult = Utils.sendGet(userPicUrl,headerMap,null);
                 resultMap = JSON.parseObject(picListresult, Map.class);
                 List<Map> authPicList = (List) resultMap.get("illusts");
                 if(authPicList == null || authPicList.get(0)==null | authPicList.get(0).get("user") == null){

@@ -2,6 +2,7 @@ package cn.youngbear.utils.PixivLiteUtils;
 
 import cn.youngbear.pojo.Constant;
 import cn.youngbear.utils.util.Utils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -48,20 +49,20 @@ public class PixivLiteUtil {
         String xClientTime = PixivLiteUtil.clientTime();
         String xClientHash = PixivLiteUtil.clientHash(xClientTime);
         String deviceToken = getDeviceToken(userName);
-        String loginUrl = "http://api.pixivlite.com:8091/index.php/user/index/login";
-        headerMap.put("User-Agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)");
+        String loginUrl = Constant.loginUrl;
+        headerMap.put("User-Agent", Constant.userAgent);
         headerMap.put("Content-Type", "application/x-www-form-urlencoded");
         headerMap.put("Accept-Language", "zh_CN");
         headerMap.put("Accept-Encoding", "gzip");
         headerMap.put("Connection", "Keep-Alive");
 
-        paramsList.add(new BasicNameValuePair("agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)"));
+        paramsList.add(new BasicNameValuePair("agent", Constant.userAgent));
         paramsList.add(new BasicNameValuePair("username", userName));
         paramsList.add(new BasicNameValuePair("password", passWord));
         paramsList.add(new BasicNameValuePair("device_token", deviceToken));
         paramsList.add(new BasicNameValuePair("x-client-time", xClientTime));
         paramsList.add(new BasicNameValuePair("x-client-hash", xClientHash));
-        String result = Utils.sendPost(loginUrl, false, true, headerMap, null, paramsList);
+        String result = Utils.sendPost(loginUrl, true, headerMap, null, paramsList);
         try{
             Map<String, Map> resultMap = JSONObject.parseObject(result, Map.class);
             String token = String.valueOf((resultMap.get("response")).get("access_token"));
@@ -69,7 +70,7 @@ public class PixivLiteUtil {
             headerMap.put("token","Bearer " + token);
             headerMap.put("loginUserId", loginUserId);
             Constant.loginUserId=loginUserId;
-            Constant.userAgent="PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)";
+            Constant.userAgent=Constant.userAgent;
             Constant.contentType="application/x-www-form-urlencoded";
             Constant.acceptLanguage="zh_CN";
             Constant.acceptEncoding="gzip";
@@ -86,13 +87,13 @@ public class PixivLiteUtil {
     }
 
     public String getDeviceToken(String email) {
-        String getDeviceUrl = "http://api.pixivlite.com:8091/index.php/user/index/getDeviceToken?email=" + email;
+        String getDeviceUrl = Constant.getDeviceBaseUrl + email;
         ArrayList<NameValuePair> paramsList = new ArrayList<>(8);
         HashMap headerMap = new HashMap(16);
-        headerMap.put("User-Agent", "PixivAndroidApp/5.0.200 (Android 10; Redmi Note 8 Pro)");
-        headerMap.put("Host", "oauth.secure.pixiv.net");
-        paramsList.add(new BasicNameValuePair("device_token", "pixiv"));
-        String result = Utils.sendPost(getDeviceUrl, false, true, headerMap, null, paramsList);
+        headerMap.put("User-Agent", Constant.userAgent);
+        headerMap.put("Host", Constant.host);
+        paramsList.add(new BasicNameValuePair("device_token", Constant.deviceToken));
+        String result = Utils.sendPost(getDeviceUrl,  true, headerMap, null, paramsList);
         Map<String, Map> resultMap = JSONObject.parseObject(result, Map.class);
         Constant.deviceToken= String.valueOf(resultMap.get("device_token"));
         return result;
@@ -104,20 +105,24 @@ public class PixivLiteUtil {
      * @return
      */
     public static String flushToken(String clientId, String clientSecret) {
-        String url = "https://oauth.secure.pixiv.net/auth/token";
-        HashMap<String, String> map = new HashMap(7);
-        map.put("client_id", clientId);
-        map.put("client_secret", clientSecret);
-        map.put("refresh_token", Constant.token.replace("Bearer ", ""));
-        map.put("device_token", Constant.deviceToken);
-        map.put("grant_type", "refresh_token");
-        map.put("get_secure_url", "true");
-        map.put("include_policy", "true");
-//        String result = Utils.sendPost(url, map);
-//        Map resultMap = JSON.parseObject(result, Map.class);
-//        String token = String.valueOf(((Map) resultMap.get("response")).get("access_token"));
-//        return "Bearer " + token;
-        return null;
+        String url = Constant.flushTokenUrl;
+        HashMap<String, String> headMap = new HashMap(7);
+        headMap.put("client_id", clientId);
+        headMap.put("client_secret", clientSecret);
+        headMap.put("refresh_token", Constant.token.replace("Bearer ", ""));
+        headMap.put("device_token", Constant.deviceToken);
+        headMap.put("grant_type", "refresh_token");
+        headMap.put("get_secure_url", "true");
+        headMap.put("include_policy", "true");
+        String result = Utils.sendPost(url,true,headMap,null,null);
+        Map resultMap = JSON.parseObject(result, Map.class);
+        String token = String.valueOf(((Map) resultMap.get("response")).get("access_token"));
+        if(token!=null && !"".equals(token)){
+            return "Bearer " + token;
+        }else{
+
+            return "";
+        }
     }
 
 

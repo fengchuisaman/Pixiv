@@ -2,8 +2,6 @@ package cn.youngbear.pojo;
 
 public class Constant {
     public static String loginUserId;
-    public static String loginUserName;
-    public static String loginUserAccount;
     public static String loginUserMail;
     public static String loginUserPassWord;
 
@@ -30,6 +28,7 @@ public class Constant {
     public static String recommendUrl;
     public static String loveAuthUrl;
     public static String userPicUrl;
+    public static String flushTokenUrl;
 
     public static String mysqlDriver;
     public static String mysqlUrl;
@@ -37,6 +36,7 @@ public class Constant {
     public static String mysqlPassword;
 
     public static String userAgent;
+    public static String host;
     public static String contentType;
     public static String acceptLanguage;
     public static String acceptEncoding;
@@ -46,5 +46,9 @@ public class Constant {
     public static String xClientHash;
     public static String token;
     public static String useProxy;
+    public static String getDeviceBaseUrl;
+    public static String loginUrl;
+
+
 
 }
