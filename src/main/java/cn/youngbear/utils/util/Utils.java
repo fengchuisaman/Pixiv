@@ -29,10 +29,7 @@ import java.net.URL;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Utils {
 
@@ -206,26 +203,29 @@ public class Utils {
     }
 
     /**
-     * 刷新Token，获取最新Token
-     *
-     * @return
+     * 把picList转化成下载地址List<Map<PicName,downloadUrl>>
+     * @param picList
      */
-    public static String flushToken(String clientId, String clientSecret) {
-        String url = "https://oauth.secure.pixiv.net/auth/token";
-        HashMap<String, String> map = new HashMap(7);
-        map.put("client_id", clientId);
-        map.put("client_secret", clientSecret);
-        map.put("refresh_token", Constant.token.replace("Bearer ", ""));
-        map.put("device_token", Constant.deviceToken);
-        map.put("grant_type", "refresh_token");
-        map.put("get_secure_url", "true");
-        map.put("include_policy", "true");
-//        String result = Utils.sendPost(url, map);
-//        Map resultMap = JSON.parseObject(result, Map.class);
-//        String token = String.valueOf(((Map) resultMap.get("response")).get("access_token"));
-//        return "Bearer " + token;
-        return null;
+    public List<Map<String,String>> chageToDownloadUrl(List<Map> picList) {
+        List<Map<String,String>> picNameUrlList = new LinkedList();
+        for (Map map : picList) {
+            String url = String.valueOf(((Map) map.get("meta_single_page")).get("original_image_url"));
+            if (url == null || "null".equals(url)) {
+                url = String.valueOf(((Map) map.get("image_urls")).get("large"));
+            }
+            String fileName = map.get("title") + "_" + map.get("id") + ".jpg";
+            if (!Utils.checkFileName(fileName)) {
+                System.out.println("发现非法id:" + fileName);
+                fileName = map.get("id") + ".jpg";
+            }
+            HashMap<String,String> picNameUrlMap = new HashMap<>(2);
+            picNameUrlMap.put("picName",fileName);
+            picNameUrlMap.put("picDownloadUrl",url);
+            picNameUrlList.add(picNameUrlMap);
+        }
+        return picNameUrlList;
     }
+
 
 
     public static void downloadUseHttpClient(Map<String, String> headerMap,String urlPath, String dirPath, String fileName) throws IOException {
@@ -258,12 +258,12 @@ public class Utils {
             response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
             if (file.exists()) {
-                if (entity.getContentLength() == file.length()) {
-                    System.out.println("发现重复文件：   " + fileName);
-                    return;
-                } else {
+                if (entity.getContentLength() >= file.length()) {
                     System.out.println("发现重复文件：   " + fileName + "，且文件损坏，删除文件，重新下载");
                     file.delete();
+                } else {
+                    System.out.println("发现重复文件：   " + fileName);
+                    return;
                 }
             }
             is = entity.getContent();

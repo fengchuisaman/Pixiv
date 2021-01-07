@@ -1,7 +1,7 @@
 package cn.youngbear.service;
 
-import cn.youngbear.utils.PixivLiteUtils.PixivLiteUtil;
 import cn.youngbear.pojo.Constant;
+import cn.youngbear.utils.PixivLiteUtils.PixivLiteUtil;
 import cn.youngbear.utils.util.Utils;
 import com.alibaba.fastjson.JSON;
 
@@ -12,7 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class BaseService {
-    PixivLiteUtil pixivLiteUtil = new PixivLiteUtil();
+    private PixivLiteUtil pixivLiteUtil = new PixivLiteUtil();
+    private Utils utils = new Utils();
     private final HashMap<String,String> propertiesMap = new HashMap();
     private static int totalDownloadCount = 0;
     private SaveToFile saveToFile = new SaveToFile();
@@ -241,7 +242,7 @@ public class BaseService {
         }
         // 选择方式 下载还是存储
         if("true".equals(Constant.isDownLoadPic)){
-            List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
+            List<Map<String, String>> picNameUrlList = utils.chageToDownloadUrl(picList);
             saveToFile.baseDownloadPic(headerMap, picNameUrlList,dataMap.get("path"));
         }
         if("".equals(Constant.isSaveDataToMysql)){
@@ -314,7 +315,7 @@ public class BaseService {
             }
             // 选择方式 下载还是存储
             if("true".equals(Constant.isDownLoadPic)){
-                List<Map<String, String>> picNameUrlList = pixivLiteUtil.chageToDownloadUrl(picList);
+                List<Map<String, String>> picNameUrlList = utils.chageToDownloadUrl(picList);
                 saveToFile.baseDownloadPic(headerMap, picNameUrlList,"love\\"+authName+"\\");
                 System.out.println("下载文件完成，下载总数为"+picNameUrlList.size());
             }

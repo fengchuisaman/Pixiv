@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 在反编译后pixivLite的com.bravedefault.pixivhelper.Constant下面有
+ */
 public class PixivLiteUtil {
 
     public Map<String,String> getClientHash(){
@@ -22,7 +25,6 @@ public class PixivLiteUtil {
     }
 
     public static String clientTime() {
-//        return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.getDefault())).format(new Date());
         return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())).format(new Date());
     }
     public static String clientHash(String paramString) {
@@ -97,28 +99,28 @@ public class PixivLiteUtil {
     }
 
     /**
-     * 把picList转化成下载地址List<Map<PicName,downloadUrl>>
-     * @param picList
+     * 刷新Token，获取最新Token
+     *
+     * @return
      */
-    public List<Map<String,String>> chageToDownloadUrl(List<Map> picList) {
-        List<Map<String,String>> picNameUrlList = new LinkedList();
-        for (Map map : picList) {
-            String url = String.valueOf(((Map) map.get("meta_single_page")).get("original_image_url"));
-            if (url == null || "null".equals(url)) {
-                url = String.valueOf(((Map) map.get("image_urls")).get("large"));
-            }
-            String fileName = map.get("title") + "_" + map.get("id") + ".jpg";
-            if (!Utils.checkFileName(fileName)) {
-                System.out.println("发现非法id:" + fileName);
-                fileName = map.get("id") + ".jpg";
-            }
-            HashMap<String,String> picNameUrlMap = new HashMap<>(2);
-            picNameUrlMap.put("picName",fileName);
-            picNameUrlMap.put("picDownloadUrl",url);
-            picNameUrlList.add(picNameUrlMap);
-        }
-        return picNameUrlList;
+    public static String flushToken(String clientId, String clientSecret) {
+        String url = "https://oauth.secure.pixiv.net/auth/token";
+        HashMap<String, String> map = new HashMap(7);
+        map.put("client_id", clientId);
+        map.put("client_secret", clientSecret);
+        map.put("refresh_token", Constant.token.replace("Bearer ", ""));
+        map.put("device_token", Constant.deviceToken);
+        map.put("grant_type", "refresh_token");
+        map.put("get_secure_url", "true");
+        map.put("include_policy", "true");
+//        String result = Utils.sendPost(url, map);
+//        Map resultMap = JSON.parseObject(result, Map.class);
+//        String token = String.valueOf(((Map) resultMap.get("response")).get("access_token"));
+//        return "Bearer " + token;
+        return null;
     }
+
+
 
 }
 
