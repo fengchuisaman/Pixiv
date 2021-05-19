@@ -22,6 +22,8 @@ public class PicPopularPermanent {
 
     private Integer totalView;
 
+    private Integer totalLike;
+
     private Integer totalBookmarks;
 
     private Date createTime;
@@ -30,88 +32,108 @@ public class PicPopularPermanent {
         return picId;
     }
 
-    public void setPicId(Long picId) {
-        this.picId = picId ;
+    public PicPopularPermanent setPicId(Long picId) {
+        this.picId = picId;
+        return this;
     }
 
     public String getPicName() {
         return picName;
     }
 
-    public void setPicName(String picName) {
-        this.picName = picName == null ? null : picName.trim();
+    public PicPopularPermanent setPicName(String picName) {
+        this.picName = picName;
+        return this;
     }
 
     public String getPicSmallUrl() {
         return picSmallUrl;
     }
 
-    public void setPicSmallUrl(String picSmallUrl) {
-        this.picSmallUrl = picSmallUrl == null ? null : picSmallUrl.trim();
+    public PicPopularPermanent setPicSmallUrl(String picSmallUrl) {
+        this.picSmallUrl = picSmallUrl;
+        return this;
     }
 
     public String getPicSize() {
         return picSize;
     }
 
-    public void setPicSize(String picSize) {
-        this.picSize = picSize == null ? null : picSize.trim();
+    public PicPopularPermanent setPicSize(String picSize) {
+        this.picSize = picSize;
+        return this;
     }
 
     public Long getTagId() {
         return tagId;
     }
 
-    public void setTagId(Long tagId) {
+    public PicPopularPermanent setTagId(Long tagId) {
         this.tagId = tagId;
+        return this;
     }
 
     public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId == null ? null : authorId.trim();
+    public PicPopularPermanent setAuthorId(String authorId) {
+        this.authorId = authorId;
+        return this;
     }
 
     public String getPageCount() {
         return pageCount;
     }
 
-    public void setPageCount(String pageCount) {
-        this.pageCount = pageCount == null ? null : pageCount.trim();
+    public PicPopularPermanent setPageCount(String pageCount) {
+        this.pageCount = pageCount;
+        return this;
     }
 
     public String getPicUrl() {
         return picUrl;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl == null ? null : picUrl.trim();
+    public PicPopularPermanent setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+        return this;
     }
 
     public Integer getTotalView() {
         return totalView;
     }
 
-    public void setTotalView(Integer totalView) {
+    public PicPopularPermanent setTotalView(Integer totalView) {
         this.totalView = totalView;
+        return this;
     }
 
     public Integer getTotalBookmarks() {
         return totalBookmarks;
     }
 
-    public void setTotalBookmarks(Integer totalBookmarks) {
+    public PicPopularPermanent setTotalBookmarks(Integer totalBookmarks) {
         this.totalBookmarks = totalBookmarks;
+        return this;
     }
 
     public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public PicPopularPermanent setCreateTime(Date createTime) {
         this.createTime = createTime;
+        return this;
+    }
+
+    public Integer getTotalLike() {
+        return totalLike;
+    }
+
+    public PicPopularPermanent setTotalLike(Integer totalLike) {
+        this.totalLike = totalLike;
+        return this;
     }
 
     @Override
@@ -128,12 +150,13 @@ public class PicPopularPermanent {
                 Objects.equals(pageCount, that.pageCount) &&
                 Objects.equals(picUrl, that.picUrl) &&
                 Objects.equals(totalView, that.totalView) &&
+                Objects.equals(totalLike, that.totalLike) &&
                 Objects.equals(totalBookmarks, that.totalBookmarks) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(picId, picName, picSmallUrl, picSize, tagId, authorId, pageCount, picUrl, totalView, totalBookmarks, createTime);
+        return Objects.hash(picId, picName, picSmallUrl, picSize, tagId, authorId, pageCount, picUrl, totalView, totalLike, totalBookmarks, createTime);
     }
 }

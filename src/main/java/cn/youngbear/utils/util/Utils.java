@@ -2,33 +2,73 @@ package cn.youngbear.utils.util;
 
 import cn.youngbear.pojo.Constant;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.slf4j.internal.Logger;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import javax.annotation.Resource;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Utils {
+    private Logger logger = LoggerFactory.getLogger(Utils.class);
+    private static PoolingHttpClientConnectionManager cm;
+
+    /**
+     * 初始化，把配置文件信息 写入类
+     */
+    public void init() {
+//        HashMap<String,String> propertiesMap = new HashMap();
+        Properties prop = new Properties();
+        try {
+            //读取属性文件config.properties
+            prop.load(this.getClass().getResourceAsStream("/config.properties"));
+            Iterator<String> it = prop.stringPropertyNames().iterator();
+            Constant constant = new Constant();
+            Class<?> clz = constant.getClass();
+            while (it.hasNext()) {
+                String key = it.next();
+//                propertiesMap.put(key, prop.getProperty(key));
+                try {
+                    Field modifiersField = clz.getDeclaredField(key);
+                    modifiersField.setAccessible(true);
+                    modifiersField.set(null,prop.getProperty(key));
+                }catch (NoSuchFieldException e){System.out.println(e);}
+
+            }
+        } catch (Exception e) {
+            logger.error("初始化错误",e);
+        }
+    }
 
 
     public static String sendGet(String url, Map<String, String> headerMap, Map<String, String> paramsMap) {
@@ -37,7 +77,7 @@ public class Utils {
         CloseableHttpClient httpClient = null;
         boolean isUserProxy = Boolean.parseBoolean(Constant.useProxy);
         try {
-            httpClient = HttpClients.createDefault();
+            httpClient = getClient(true);
             URIBuilder urlBuilder = new URIBuilder(url);
             if(paramsMap!=null && !paramsMap.isEmpty()){
                 for (String key : paramsMap.keySet()) {
@@ -49,15 +89,22 @@ public class Utils {
                 httpGet.setHeader(key, headerMap.get(key));
             }
             if(isUserProxy){
-                HttpHost proxy = new HttpHost("127.0.0.1", 1080, "HTTP");
-                response = httpClient.execute(proxy,httpGet);
+                HttpHost proxy = new HttpHost("127.0.0.1", 1082, "HTTP");
+                RequestConfig config = RequestConfig.custom()
+                        .setProxy(proxy)
+                        .setConnectTimeout(50000)
+                        .setSocketTimeout(50000)
+                        .build();
+                httpGet.setConfig(config);
+                response = httpClient.execute(httpGet);
             }else{
                 response = httpClient.execute(httpGet);
             }
-            if (response.getStatusLine().getStatusCode() == 200) {
-                HttpEntity entity = response.getEntity();
-                String respContent = EntityUtils.toString(entity, "UTF-8");
-                returnValue = respContent;
+            HttpEntity entity = response.getEntity();
+            String respContent = EntityUtils.toString(entity, "UTF-8");
+            returnValue = respContent;
+            if (response.getStatusLine().getStatusCode() != 200) {
+                returnValue = "请求出现问题 ----->"+ response.getStatusLine()+entity;
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -65,7 +112,9 @@ public class Utils {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
             try {
                 if(response!=null){
                     response.close();
@@ -84,7 +133,7 @@ public class Utils {
 
     public static String sendPost(String url, boolean isForm, Map<String, String> headerMap, Map<String, String> paramsMap, List<? extends NameValuePair> paramsList) {
         String returnValue = null;
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = getClient(true);
         CloseableHttpResponse response = null;
         boolean isUserProxy = Boolean.parseBoolean(Constant.useProxy);
         try {
@@ -103,7 +152,13 @@ public class Utils {
                 httppost.setEntity(formEntity);
             }
             if(isUserProxy){
-                HttpHost proxy = new HttpHost("127.0.0.1", 8888, "HTTPS");
+                HttpHost proxy = new HttpHost("127.0.0.1", 1082, "HTTP");
+                RequestConfig config = RequestConfig.custom()
+                        .setProxy(proxy)
+                        .setConnectTimeout(50000)
+                        .setSocketTimeout(50000)
+                        .build();
+                httppost.setConfig(config);
                 response = httpClient.execute(proxy,httppost);
             }else{
                 response = httpClient.execute(httppost);
@@ -201,7 +256,9 @@ public class Utils {
             filePath=filePath.replace("\\","/");
         }
         File file = new File(filePath);
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //默认创建 httpClient
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpClient httpClient = getClient(true);
         CloseableHttpResponse response ;
         long begin = 0;
         InputStream is = null;
@@ -212,10 +269,21 @@ public class Utils {
             for(String headerKey: headerMap.keySet()){
                 httpGet.addHeader(headerKey, headerMap.get(headerKey));
             }
-            response = httpClient.execute(httpGet);
+            if(Boolean.valueOf(Constant.useProxyForDownLoad)){
+                HttpHost proxy = new HttpHost("127.0.0.1", 1081, "HTTP");
+                RequestConfig config = RequestConfig.custom()
+                        .setProxy(proxy)
+                        .setConnectTimeout(50000)
+                        .setSocketTimeout(50000)
+                        .build();
+                httpGet.setConfig(config);
+                response = httpClient.execute(httpGet);
+            }else{
+                response = httpClient.execute(httpGet);
+            }
             HttpEntity entity = response.getEntity();
             if (file.exists()) {
-                if (entity.getContentLength() >= file.length()) {
+                if (entity.getContentLength() > file.length()) {
                     System.out.println("发现重复文件：   " + fileName + "，且文件损坏，删除文件，重新下载");
                     file.delete();
                 } else {
@@ -312,6 +380,52 @@ public class Utils {
 //        resultMap.put("resultPicTagList", resultPicTagList);
 //        return resultMap;
 //    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @param isPooled 是否使用连接池
+     */
+    public static CloseableHttpClient getClient(boolean isPooled) {
+        cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(1000);
+        cm.setDefaultMaxPerRoute(1000);
+        HttpRequestRetryHandler handler = new HttpRequestRetryHandler() {
+            @Override
+            public boolean retryRequest(IOException arg0, int retryTimes, HttpContext arg2) {
+                if (retryTimes > 2) {
+                    return false;
+                }
+                if (arg0 instanceof UnknownHostException || arg0 instanceof ConnectTimeoutException
+                        || !(arg0 instanceof SSLException) || arg0 instanceof NoHttpResponseException
+                        || arg0 instanceof SSLHandshakeException || arg0 instanceof SSLHandshakeException) {
+                    return true;
+                }
+
+                HttpClientContext clientContext = HttpClientContext.adapt(arg2);
+                HttpRequest request = clientContext.getRequest();
+                boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
+                if (idempotent) {
+                    // 如果请求被认为是幂等的，那么就重试。即重复执行不影响程序其他效果的
+                    return true;
+                }
+                return false;
+            }
+        };
+
+
+        if (isPooled) {
+            return HttpClients.custom().setConnectionManager(cm).setRetryHandler(handler).build();
+        }
+        return HttpClients.createDefault();
+    }
 
 
 }

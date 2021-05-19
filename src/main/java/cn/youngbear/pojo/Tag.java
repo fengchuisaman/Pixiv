@@ -7,6 +7,8 @@ public class Tag {
 
     private String tagName;
 
+    private String tagNameZh;
+
     public Tag() {
     }
 
@@ -19,29 +21,26 @@ public class Tag {
         return tagId;
     }
 
-    public void setTagId(Long tagId) {
+    public Tag setTagId(Long tagId) {
         this.tagId = tagId;
+        return this;
     }
 
     public String getTagName() {
         return tagName;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName == null ? null : tagName.trim();
+    public Tag setTagName(String tagName) {
+        this.tagName = tagName;
+        return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(tagId, tag.tagId) &&
-                Objects.equals(tagName, tag.tagName);
+    public String getTagNameZh() {
+        return tagNameZh;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(tagId, tagName);
+    public Tag setTagNameZh(String tagNameZh) {
+        this.tagNameZh = tagNameZh;
+        return this;
     }
 }

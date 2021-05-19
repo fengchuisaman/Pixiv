@@ -14,15 +14,7 @@ public class Constant {
     public static String downloadLimit;
 
     public static String baseUrl;
-    public static String loveUrl;
-    public static String dailyUrl;
-    public static String weekUrl;
-    public static String monthUrl;
-    public static String dayMaleUrl;
-    public static String femaleUrl;
-    public static String originalUrl;
-    public static String r18Url;
-    public static String r18gUrl;
+
     public static String wordUrl;
     public static String authIdUrl;
     public static String recommendUrl;
@@ -46,9 +38,26 @@ public class Constant {
     public static String xClientHash;
     public static String token;
     public static String useProxy;
+    public static String useProxyForDownLoad;
     public static String getDeviceBaseUrl;
     public static String loginUrl;
 
+    // 登陆页面Url
+    public static String loginHtmlUrl;
+    //登录qpi url
+    public static String loginApiUrl;
+    //获取googleToken接口
+    public static String getGoogleTokenUrl;
+    //获取 关注的人的地址
+    public static String getFollowPersopnUrl;
+    // 获取人的所有作品Id  地址
+    public static String getAllPicIdUrl;
+    // 获取图片下载地址接口
+    public static String getImgDownUrl;
+    // 获取 图片详情信息 接口
+    public static String getImgPojoUrl;
+    // 获取 R18选项 接口
+    public static String chageR18Url;
 
 
 }
