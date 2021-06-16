@@ -1,26 +1,40 @@
 package cn.youngbear.pojo;
 
+import java.util.List;
 import java.util.Objects;
 
 public class PicTag {
-    private Long picId;
+    private String picId;
 
     private Long tagId;
 
-    public Long getPicId() {
+    private List<Tag> tagList;
+
+    public String getPicId() {
         return picId;
     }
 
-    public void setPicId(Long picId) {
+    public PicTag setPicId(String picId) {
         this.picId = picId;
+        return this;
     }
 
     public Long getTagId() {
         return tagId;
     }
 
-    public void setTagId(Long tagId) {
+    public PicTag setTagId(Long tagId) {
         this.tagId = tagId;
+        return this;
+    }
+
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public PicTag setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
+        return this;
     }
 
     @Override
@@ -29,11 +43,12 @@ public class PicTag {
         if (o == null || getClass() != o.getClass()) return false;
         PicTag picTag = (PicTag) o;
         return Objects.equals(picId, picTag.picId) &&
-                Objects.equals(tagId, picTag.tagId);
+                Objects.equals(tagId, picTag.tagId) &&
+                Objects.equals(tagList, picTag.tagList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(picId, tagId);
+        return Objects.hash(picId, tagId, tagList);
     }
 }

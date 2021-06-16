@@ -43,4 +43,11 @@ public class Tag {
         this.tagNameZh = tagNameZh;
         return this;
     }
+    public Tag getTag(Tag tag){
+        Tag newTag = new Tag();
+        newTag.setTagId(tag.getTagId());
+        newTag.setTagName(tag.getTagName());
+        newTag.setTagNameZh(tag.getTagNameZh());
+        return newTag;
+    }
 }

@@ -89,7 +89,7 @@ public class Utils {
                 httpGet.setHeader(key, headerMap.get(key));
             }
             if(isUserProxy){
-                HttpHost proxy = new HttpHost("127.0.0.1", 1082, "HTTP");
+                HttpHost proxy = new HttpHost("127.0.0.1", 1081, "HTTP");
                 RequestConfig config = RequestConfig.custom()
                         .setProxy(proxy)
                         .setConnectTimeout(50000)

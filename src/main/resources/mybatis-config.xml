@@ -21,10 +21,10 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
             <transactionManager type="JDBC" />
             <!-- 数据库连接池 -->
             <dataSource type="POOLED">
-                <property name="driver" value="${driver}" />
-                <property name="url" value="${url}" />
-                <property name="username" value="${username}" />
-                <property name="password" value="${password}" />
+                <property name="driver" value="${mysqlDriver}" />
+                <property name="url" value="${mysqlUrl}" />
+                <property name="username" value="${mysqlUsername}" />
+                <property name="password" value="${mysqlPassword}" />
                 <property name="poolMaximumActiveConnections" value="100"/>
                 <property name="poolMaximumIdleConnections" value="20"/>
             </dataSource>
@@ -33,6 +33,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     
     <!-- 设置mapper扫描 -->
     <mappers>
-        <package name="com.test.mapper" />
+        <package name="cn.youngbear.mapper" />
     </mappers>
 </configuration>  

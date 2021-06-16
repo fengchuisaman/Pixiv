@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.mapper.AuthorMapper">
-  <resultMap id="BaseResultMap" type="com.test.pojo.Author">
+<mapper namespace="cn.youngbear.mapper.AuthorMapper">
+  <resultMap id="BaseResultMap" type="cn.youngbear.pojo.Author">
     <id column="author_id" jdbcType="VARCHAR" property="authorId" />
     <result column="author_name" jdbcType="VARCHAR" property="authorName" />
     <result column="author_pic" jdbcType="VARCHAR" property="authorPic" />
+    <result column="author_background_pic" jdbcType="VARCHAR" property="authorBackgroundPic" />
+    <result column="isFollowed" jdbcType="VARCHAR" property="isFollowed" />
   </resultMap>
   <sql id="Base_Column_List">
-    author_id, author_name, author_pic
+    author_id, author_name, author_pic,author_background_pic ,isFollowed
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -15,17 +17,23 @@
     from author
     where author_id = #{authorId,jdbcType=VARCHAR}
   </select>
+  <select id="selectByAuthName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from author
+    where author_name = #{authorName,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from author
     where author_id = #{authorId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.test.pojo.Author">
-    insert into author (author_id, author_name, author_pic
+  <insert id="insert" parameterType="cn.youngbear.pojo.Author">
+    insert into author (author_id, author_name, author_pic,author_background_pic,isFollowed
       )
-    values (#{authorId,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR}, #{authorPic,jdbcType=VARCHAR}
+    values (#{authorId,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR}, #{authorPic,jdbcType=VARCHAR}, #{authorBackgroundPic,jdbcType=VARCHAR}, #{isFollowed,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.test.pojo.Author">
+  <insert id="insertSelective" parameterType="cn.youngbear.pojo.Author">
     insert into author
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="authorId != null">
@@ -36,6 +44,12 @@
       </if>
       <if test="authorPic != null">
         author_pic,
+      </if>
+      <if test="authorBackgroundPic != null">
+        author_background_pic,
+      </if>
+      <if test="isFollowed != null">
+        isFollowed,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -48,9 +62,15 @@
       <if test="authorPic != null">
         #{authorPic,jdbcType=VARCHAR},
       </if>
+      <if test="authorBackgroundPic != null">
+        #{authorBackgroundPic,jdbcType=VARCHAR},
+      </if>
+      <if test="isFollowed != null">
+        #{isFollowed,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.test.pojo.Author">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.youngbear.pojo.Author">
     update author
     <set>
       <if test="authorName != null">
@@ -59,13 +79,21 @@
       <if test="authorPic != null">
         author_pic = #{authorPic,jdbcType=VARCHAR},
       </if>
+      <if test="isFollowed != null">
+        isFollowed = #{isFollowed,jdbcType=VARCHAR},
+      </if>
+      <if test="authorBackgroundPic != null">
+        author_background_pic = #{authorBackgroundPic,jdbcType=VARCHAR},
+      </if>
     </set>
     where author_id = #{authorId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Author">
+  <update id="updateByPrimaryKey" parameterType="cn.youngbear.pojo.Author">
     update author
     set author_name = #{authorName,jdbcType=VARCHAR},
-      author_pic = #{authorPic,jdbcType=VARCHAR}
+      author_pic = #{authorPic,jdbcType=VARCHAR},
+      author_background_pic = #{authorBackgroundPic,jdbcType=VARCHAR},
+      isFollowed = #{isFollowed,jdbcType=VARCHAR}
     where author_id = #{authorId,jdbcType=VARCHAR}
   </update>
 

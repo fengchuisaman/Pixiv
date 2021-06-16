@@ -9,7 +9,7 @@ public class Author {
 
     private String authorPic;
 
-    private String author_background_pic;
+    private String authorBackgroundPic;
 
     private String isFollowed;
 
@@ -40,12 +40,12 @@ public class Author {
         return this;
     }
 
-    public String getAuthor_background_pic() {
-        return author_background_pic;
+    public String getAuthorBackgroundPic() {
+        return authorBackgroundPic;
     }
 
-    public Author setAuthor_background_pic(String author_background_pic) {
-        this.author_background_pic = author_background_pic;
+    public Author setAuthorBackgroundPic(String authorBackgroundPic) {
+        this.authorBackgroundPic = authorBackgroundPic;
         return this;
     }
 
@@ -66,12 +66,22 @@ public class Author {
         return Objects.equals(authorId, author.authorId) &&
                 Objects.equals(authorName, author.authorName) &&
                 Objects.equals(authorPic, author.authorPic) &&
-                Objects.equals(author_background_pic, author.author_background_pic) &&
+                Objects.equals(authorBackgroundPic, author.authorBackgroundPic) &&
                 Objects.equals(isFollowed, author.isFollowed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(authorId, authorName, authorPic, author_background_pic, isFollowed);
+        return Objects.hash(authorId, authorName, authorPic, authorBackgroundPic, isFollowed);
+    }
+
+    public Author getAuthor(Author author){
+        Author returnAuthor = new Author();
+        returnAuthor.setAuthorId(author.getAuthorId());
+        returnAuthor.setAuthorName(author.getAuthorName());
+        returnAuthor.setAuthorPic(author.getAuthorPic());
+        returnAuthor.setAuthorBackgroundPic(author.getAuthorBackgroundPic());
+        returnAuthor.setAuthorId(author.getAuthorId());
+        return  returnAuthor;
     }
 }

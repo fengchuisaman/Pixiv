@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class PicPopularPermanent {
-    private Long picId;
+    private String picId;
 
     private String picName;
 
@@ -28,11 +28,11 @@ public class PicPopularPermanent {
 
     private Date createTime;
 
-    public Long getPicId() {
+    public String getPicId() {
         return picId;
     }
 
-    public PicPopularPermanent setPicId(Long picId) {
+    public PicPopularPermanent setPicId(String picId) {
         this.picId = picId;
         return this;
     }
@@ -158,5 +158,21 @@ public class PicPopularPermanent {
     @Override
     public int hashCode() {
         return Objects.hash(picId, picName, picSmallUrl, picSize, tagId, authorId, pageCount, picUrl, totalView, totalLike, totalBookmarks, createTime);
+    }
+    public PicPopularPermanent getPic(PicPopularPermanent picPopularPermanent){
+        PicPopularPermanent newPicPopularPermanent = new PicPopularPermanent();
+        newPicPopularPermanent.setCreateTime(picPopularPermanent.getCreateTime());
+        newPicPopularPermanent.setTotalBookmarks(picPopularPermanent.getTotalBookmarks());
+        newPicPopularPermanent.setTotalLike(picPopularPermanent.getTotalLike());
+        newPicPopularPermanent.setTotalView(picPopularPermanent.getTotalView());
+        newPicPopularPermanent.setPicSmallUrl(picPopularPermanent.getPicSmallUrl());
+        newPicPopularPermanent.setPicUrl(picPopularPermanent.getPicUrl());
+        newPicPopularPermanent.setPicSize(picPopularPermanent.getPicSize());
+        newPicPopularPermanent.setPicName(picPopularPermanent.getPicName());
+        newPicPopularPermanent.setAuthorId(picPopularPermanent.getAuthorId());
+        newPicPopularPermanent.setPicId(picPopularPermanent.getPicId());
+        newPicPopularPermanent.setTagId(picPopularPermanent.getTagId());
+        newPicPopularPermanent.setPageCount(picPopularPermanent.getPageCount());
+        return newPicPopularPermanent;
     }
 }

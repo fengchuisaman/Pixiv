@@ -10,8 +10,9 @@ public class Constant {
     public static String downloadPathForWindows;
     public static String downloadPathForLinux;
     public static String isSaveDataToMysql;
+    public static String isSaveDataToRedis;
     public static String wordLimit;
-    public static String downloadLimit;
+    public static String downloadLimitForLove;
 
     public static String baseUrl;
 
@@ -22,10 +23,9 @@ public class Constant {
     public static String userPicUrl;
     public static String flushTokenUrl;
 
-    public static String mysqlDriver;
-    public static String mysqlUrl;
-    public static String mysqlUsername;
-    public static String mysqlPassword;
+    public static String redisHost="127.0.0.1";
+    public static String redisPort="46379";
+    public static String redisPass="1234";
 
     public static String userAgent;
     public static String host;

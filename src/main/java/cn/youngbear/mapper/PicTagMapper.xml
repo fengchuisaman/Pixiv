@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.mapper.PicTagMapper">
-  <resultMap id="BaseResultMap" type="com.test.pojo.PicTag">
-    <result column="pic_id" jdbcType="BIGINT" property="picId" />
+<mapper namespace="cn.youngbear.mapper.PicTagMapper">
+  <resultMap id="BaseResultMap" type="cn.youngbear.pojo.PicTag">
+    <result column="pic_id" jdbcType="VARCHAR" property="picId" />
     <result column="tag_id" jdbcType="BIGINT" property="tagId" />
   </resultMap>
-  <insert id="insert" parameterType="com.test.pojo.PicTag">
+  <insert id="insert" parameterType="cn.youngbear.pojo.PicTag">
     insert into pic_tag (pic_id, tag_id)
-    values (#{picId,jdbcType=BIGINT}, #{tagId,jdbcType=BIGINT})
+    values (#{picId,jdbcType=VARCHAR}, #{tagId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.test.pojo.PicTag">
-    insert into pic_tag
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="picId != null">
-        pic_id,
-      </if>
-      <if test="tagId != null">
-        tag_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="picId != null">
-        #{picId,jdbcType=BIGINT},
-      </if>
-      <if test="tagId != null">
-        #{tagId,jdbcType=BIGINT},
-      </if>
-    </trim>
+  <insert id="insertSelective" parameterType="cn.youngbear.pojo.PicTag">
+    insert into pic_tag values
+      <foreach collection="tagList" item="tag"  separator=",">
+        (#{picId,jdbcType=VARCHAR},#{tag.tagId,jdbcType=VARCHAR})
+      </foreach>
   </insert>
   <delete id="deleteByPicId" parameterType="java.lang.String">
       delete from pic_tag where pic_id = #{picId}
   </delete>
 
-  <insert id="insertWithList" parameterType="com.test.pojo.PicTag">
+  <insert id="insertWithList" parameterType="cn.youngbear.pojo.PicTag">
     insert into pic_tag (pic_id, tag_id)
     values
     <foreach collection="list" separator="," item="picTag">
@@ -43,7 +30,7 @@
     </foreach>
   </insert>
 
-  <select id="selctCountWithTagPic" parameterType="com.test.pojo.PicTag" resultType="int">
+  <select id="selctCountWithTagPic" parameterType="cn.youngbear.pojo.PicTag" resultType="int">
     select count(*) from pic_tag where pic_id = #{picId} and tag_id = #{tagId}
   </select>
 

@@ -10,6 +10,8 @@ public interface AuthorMapper {
 
     Author selectByPrimaryKey(String authorId);
 
+    Author selectByAuthName(String authorName);
+
     int updateByPrimaryKeySelective(Author record);
 
     int updateByPrimaryKey(Author record);

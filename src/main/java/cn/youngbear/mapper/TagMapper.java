@@ -7,13 +7,15 @@ import java.util.List;
 public interface TagMapper {
     int deleteByPrimaryKey(Long tagId);
 
-    int insert(Tag record);
+    Long insert(Tag record);
 
-    int insertSelective(Tag record);
-    int insertTags(List<Tag> list);
+    Long insertSelective(Tag record);
+
+    Long insertTags(List<Tag> list);
 
     Tag selectByPrimaryKey(Long tagId);
-    Long selectTagIdByName(String tagName);
+
+    Long selectTagIdByName(Tag tag);
 
     int updateByPrimaryKeySelective(Tag record);
 

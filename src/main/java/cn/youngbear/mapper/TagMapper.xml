@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.test.mapper.TagMapper">
-  <resultMap id="BaseResultMap" type="com.test.pojo.Tag">
+<mapper namespace="cn.youngbear.mapper.TagMapper">
+  <resultMap id="BaseResultMap" type="cn.youngbear.pojo.Tag">
     <id column="tag_id" jdbcType="BIGINT" property="tagId" />
     <result column="tag_name" jdbcType="VARCHAR" property="tagName" />
+    <result column="tag_name_zh" jdbcType="VARCHAR" property="tagNameZh" />
   </resultMap>
   <sql id="Base_Column_List">
-    tag_id, tag_name
+    tag_id, tag_name, tag_name_zh
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -18,11 +19,11 @@
     delete from tag
     where tag_id = #{tagId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.test.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
-    insert into tag (tag_id, tag_name)
-    values (#{tagId,jdbcType=BIGINT}, #{tagName,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="cn.youngbear.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
+    insert into tag (tag_id, tag_name,tag_name_zh)
+    values (#{tagId,jdbcType=BIGINT}, #{tagName,jdbcType=VARCHAR},#{tagNameZh,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.test.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
+  <insert id="insertSelective" parameterType="cn.youngbear.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
     insert into tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="tagId != null">
@@ -30,6 +31,9 @@
       </if>
       <if test="tagName != null">
         tag_name,
+      </if>
+      <if test="tagNameZh != null">
+        tag_name_zh,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -39,39 +43,53 @@
       <if test="tagName != null">
         #{tagName,jdbcType=VARCHAR},
       </if>
+      <if test="tagNameZh != null">
+        #{tagNameZh,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.test.pojo.Tag">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.youngbear.pojo.Tag">
     update tag
     <set>
       <if test="tagName != null">
         tag_name = #{tagName,jdbcType=VARCHAR},
       </if>
+      <if test="tagNameZh != null">
+        tag_name_zh = #{tagNameZh,jdbcType=VARCHAR},
+      </if>
     </set>
     where tag_id = #{tagId,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.test.pojo.Tag">
+  <update id="updateByPrimaryKey" parameterType="cn.youngbear.pojo.Tag">
     update tag
     set tag_name = #{tagName,jdbcType=VARCHAR}
+    , tag_name_zh = #{tagNameZh,jdbcType=VARCHAR}
     where tag_id = #{tagId,jdbcType=BIGINT}
   </update>
 
-  <select id="selectTagIdByName" parameterType="java.lang.String" resultType="java.lang.Long">
+  <select id="selectTagIdByName" parameterType="cn.youngbear.pojo.Tag" resultType="java.lang.Long">
     select  tag_id
     from tag
-    where tag_Name = #{tagName}
+    <where>
+      <if test="tagName != null">
+        tag_name = #{tagName,jdbcType=VARCHAR}
+      </if>
+      <if test="tagNameZh != null">
+        tag_name_zh = #{tagNameZh,jdbcType=VARCHAR}
+      </if>
+    </where>
   </select>
 
 
   <insert id="insertTags" keyColumn="tag_id" keyProperty="tagId" parameterType="java.lang.String" useGeneratedKeys="true">
-    insert into tag (tag_id, tag_name)
+    insert into tag (tag_id, tag_name,tag_name_zh)
     values
     <foreach collection="list" item="tagName" separator=",">
-      (null, #{tagName})
+      (null, #{tagName},#{tagNameZh})
     </foreach>
   </insert>
 
-  <select id="selctCountWithTagPic" parameterType="com.test.pojo.PicTag" resultType="int">
+  <select id="selctCountWithTagPic" parameterType="cn.youngbear.pojo.PicTag" resultType="int">
     select count(*) from pic_tag where tag_id = #{picTag.tag_id} and pic_id = #{picTag.pic_id}
   </select>
 
