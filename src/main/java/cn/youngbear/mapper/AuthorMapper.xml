@@ -28,13 +28,13 @@
     where author_id = #{authorId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.youngbear.pojo.Author">
-    insert into author (author_id, author_name, author_pic,author_background_pic,isFollowed
+    insert IGNORE  into author (author_id, author_name, author_pic,author_background_pic,isFollowed
       )
     values (#{authorId,jdbcType=VARCHAR}, #{authorName,jdbcType=VARCHAR}, #{authorPic,jdbcType=VARCHAR}, #{authorBackgroundPic,jdbcType=VARCHAR}, #{isFollowed,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.youngbear.pojo.Author">
-    insert into author
+    insert IGNORE  into author
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="authorId != null">
         author_id,

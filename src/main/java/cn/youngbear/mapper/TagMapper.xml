@@ -20,11 +20,11 @@
     where tag_id = #{tagId,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="cn.youngbear.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
-    insert into tag (tag_id, tag_name,tag_name_zh)
+    insert IGNORE into tag (tag_id, tag_name,tag_name_zh)
     values (#{tagId,jdbcType=BIGINT}, #{tagName,jdbcType=VARCHAR},#{tagNameZh,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.youngbear.pojo.Tag" useGeneratedKeys = "true" keyProperty = "tagId">
-    insert into tag
+    insert IGNORE into tag
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="tagId != null">
         tag_id,
@@ -82,7 +82,7 @@
 
 
   <insert id="insertTags" keyColumn="tag_id" keyProperty="tagId" parameterType="java.lang.String" useGeneratedKeys="true">
-    insert into tag (tag_id, tag_name,tag_name_zh)
+    insert IGNORE into tag (tag_id, tag_name,tag_name_zh)
     values
     <foreach collection="list" item="tagName" separator=",">
       (null, #{tagName},#{tagNameZh})

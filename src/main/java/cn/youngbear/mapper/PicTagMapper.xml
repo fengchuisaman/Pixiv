@@ -6,11 +6,11 @@
     <result column="tag_id" jdbcType="BIGINT" property="tagId" />
   </resultMap>
   <insert id="insert" parameterType="cn.youngbear.pojo.PicTag">
-    insert into pic_tag (pic_id, tag_id)
+    insert IGNORE into pic_tag (pic_id, tag_id)
     values (#{picId,jdbcType=VARCHAR}, #{tagId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="cn.youngbear.pojo.PicTag">
-    insert into pic_tag values
+    insert IGNORE  into pic_tag values
       <foreach collection="tagList" item="tag"  separator=",">
         (#{picId,jdbcType=VARCHAR},#{tag.tagId,jdbcType=VARCHAR})
       </foreach>
@@ -20,7 +20,7 @@
   </delete>
 
   <insert id="insertWithList" parameterType="cn.youngbear.pojo.PicTag">
-    insert into pic_tag (pic_id, tag_id)
+    insert IGNORE  into pic_tag (pic_id, tag_id)
     values
     <foreach collection="list" separator="," item="picTag">
       (

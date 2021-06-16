@@ -29,7 +29,7 @@
     where pic_id = #{picId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="cn.youngbear.pojo.PicPopularPermanent" >
-    insert into pic_popular_permanent (pic_id, pic_name, pic_small_url, 
+    insert IGNORE  into pic_popular_permanent (pic_id, pic_name, pic_small_url,
       pic_size, tag_id, author_id, 
       page_count, pic_url, total_view, 
       total_bookmarks, create_time)
@@ -39,7 +39,7 @@
       #{totalBookmarks,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.youngbear.pojo.PicPopularPermanent" >
-    insert into pic_popular_permanent
+    insert IGNORE  into pic_popular_permanent
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="picId != null" >
         pic_id,

@@ -45,15 +45,15 @@ public class RedisService {
      * 保存所有图片信息
      * @param picPopularPermanent
      * @param author
-     * @param tag
+     * @param tagList
      */
-    public void savePicInfo(PicPopularPermanent picPopularPermanent, Author author, List<Tag> tag){
+    public void savePicInfo(PicPopularPermanent picPopularPermanent, Author author, List<Tag> tagList){
         Jedis jedis = RedisUtils.getJedis();
         jedis.select(2);
         HashMap<String, String> redisMap = new HashMap<>();
         redisMap.put("picPopularPermanent",gson.toJson(picPopularPermanent));
         redisMap.put("author",gson.toJson(author));
-        redisMap.put("tag",gson.toJson(tag));
+        redisMap.put("tag",gson.toJson(tagList));
         jedis.hmset(picPopularPermanent.getPicId(),redisMap);
         jedis.close();
     }
