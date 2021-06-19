@@ -23,7 +23,7 @@ public class RedisService {
         for(String authId : authMap.keySet()){
             jedis.set(authId,authMap.get(authId));
         }
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
     }
 
     /**
@@ -38,7 +38,7 @@ public class RedisService {
                 jedis.lpush(authId,picId);
             }
         }
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
     }
 
     /**
@@ -55,7 +55,7 @@ public class RedisService {
         redisMap.put("author",gson.toJson(author));
         redisMap.put("tag",gson.toJson(tagList));
         jedis.hmset(picPopularPermanent.getPicId(),redisMap);
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
     }
 
     /**
@@ -73,7 +73,7 @@ public class RedisService {
             if(isDelete &&authName!=null && !"".equals(authName)) {jedis.del(authId);}
             resultMap.put(authId,authName);
         }
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
         return resultMap;
     }
 
@@ -92,7 +92,7 @@ public class RedisService {
             resultMap.put(authId,picIdList);
             if(isDelete && picIdList!=null && picIdList.size()>0){jedis.del(authId);}
         }
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
         return resultMap;
     }
 
@@ -115,8 +115,15 @@ public class RedisService {
             Tag tag = new Tag().getTag((cn.youngbear.pojo.Tag) JSON.parse(String.valueOf(picInfoList.get(2))));
             if(isDelete && picPopularPermanent!=null && author!=null && tag!=null){jedis.del(authId);}
         }
-        jedis.close();
+        RedisUtils.closeJedis(jedis);
         return resultMap;
+    }
+
+    public Long deletePic(String authorId,String picId){
+        Jedis jedis = RedisUtils.getJedis();
+        jedis.select(1);
+        RedisUtils.closeJedis(jedis);
+        return jedis.lrem(authorId,1,picId);
     }
 
 }

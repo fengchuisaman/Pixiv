@@ -1,6 +1,8 @@
 package cn.youngbear.utils.util;
 
+import cn.youngbear.pojo.Author;
 import cn.youngbear.pojo.Constant;
+import cn.youngbear.pojo.PicPopularPermanent;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.slf4j.internal.Logger;
 import com.sun.org.slf4j.internal.LoggerFactory;
@@ -382,10 +384,41 @@ public class Utils {
 //    }
 
 
+    public static boolean downloadPic(Map<String, Object> dataMap,HashMap<String,String> headerMap) {
+        PicPopularPermanent picPopularPermanent = (PicPopularPermanent) dataMap.get("picPopularPermanent");
+        Author author = (Author) dataMap.get("author");
+        String picdownloadUrl = picPopularPermanent.getPicUrl();
+        String picName = picPopularPermanent.getPicName();
+        String authName = author.getAuthorName();
+        File file = new File(Constant.downloadPath,authName+"\\"+picName+".jpg");
+        if(file.exists()){
+            System.out.println(Constant.downloadPath+authName+"\\"+picName+".jpg"+"文件名已存在");
+            return false;
+        }else{
+            try {
+                Utils.downloadUseHttpClient(headerMap,picdownloadUrl,Constant.downloadPath,authName+"\\"+picName+".jpg");
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+    }
 
 
 
 
+    public static String setDownloadPath(){
+         String systemName = System.getProperty("os.name");
+         if(systemName.contains("Windows")){
+                Constant.downloadPath=Constant.downloadPathForWindows;
+         }else{
+             Constant.downloadPath=Constant.downloadPathForLinux;
+         }
+         return systemName;
+    }
 
 
 

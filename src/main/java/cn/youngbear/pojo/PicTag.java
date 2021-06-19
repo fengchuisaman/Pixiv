@@ -51,4 +51,13 @@ public class PicTag {
     public int hashCode() {
         return Objects.hash(picId, tagId, tagList);
     }
+
+    @Override
+    public String toString() {
+        return "PicTag{" +
+                "picId='" + picId + '\'' +
+                ", tagId=" + tagId +
+                ", tagList=" + tagList +
+                '}';
+    }
 }

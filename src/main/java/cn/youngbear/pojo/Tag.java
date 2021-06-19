@@ -50,4 +50,13 @@ public class Tag {
         newTag.setTagNameZh(tag.getTagNameZh());
         return newTag;
     }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagId=" + tagId +
+                ", tagName='" + tagName + '\'' +
+                ", tagNameZh='" + tagNameZh + '\'' +
+                '}';
+    }
 }

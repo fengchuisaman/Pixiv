@@ -47,7 +47,11 @@ public class MysqlService {
                 tag.setTagId(tagId);
             }
         }
-        picTagMapper.insertSelective(picTag);
+        if(picTag.getTagList()!=null && picTag.getTagList().size()>0){
+            picTagMapper.insertSelective(picTag);
+        }else{
+            System.out.println("该图片Id没有标签===========>"+picTag.getPicId());
+        }
     }
 
     /**

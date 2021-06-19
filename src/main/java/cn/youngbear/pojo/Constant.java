@@ -9,6 +9,7 @@ public class Constant {
     public static String isDownLoadPic;
     public static String downloadPathForWindows;
     public static String downloadPathForLinux;
+    public static String downloadPath;
     public static String isSaveDataToMysql;
     public static String isSaveDataToRedis;
     public static String wordLimit;

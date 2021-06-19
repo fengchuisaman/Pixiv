@@ -114,6 +114,7 @@ public class WebService {
 
     /**
      * 根据PicId获取图片Url,因为可能会有多张图片，所以返回的Map<String,List>
+     *     在这个方法执行了保存数据到mysql
      * @param picId
      * @return 返回Map
      */
@@ -180,9 +181,15 @@ public class WebService {
                 tag.setTagName(String.valueOf(tagMap.get("tag")));
                 if(translationStr!=null &&!"null".equals(translationStr) ){
                     if(translationStr.contains("")){
-                        translationStr = translationStr.replace("=","=\"").replace("}","\"}");
+                        translationStr = translationStr.replaceFirst("=","=\"").replace("}","\"}").replace("/","-").replace("\\","-");
                     }
-                    Map translationMap = gson.fromJson(translationStr, Map.class);
+                    Map translationMap = new HashMap();
+                    try {
+                        translationMap = gson.fromJson(translationStr, Map.class);
+                    }catch (Exception e ){
+                        System.out.println(translationStr);
+                        e.printStackTrace();
+                    }
                     tag.setTagNameZh(String.valueOf(translationMap.get("en")));
                 }
                 tagList.add(tag);
